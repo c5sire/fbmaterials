@@ -6,6 +6,7 @@ Description: Manages a list of plant materials.
 Depends: R (>= 3.2.2)
 License: GPL-3
 LazyData: true
+Imports: magrittr
 Suggests: testthat,
     knitr,
     rmarkdown,

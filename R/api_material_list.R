@@ -184,10 +184,6 @@ import_list_from_prior <- function( crop, year, fname=NULL, # source
   out
 }
 
-# get_selected_tree_node <- function(tree) {
-#   unlist(get_selected(tree))
-# }
-
 
 get_material_n <- function(fp){
   table_materials = NULL
@@ -195,11 +191,6 @@ get_material_n <- function(fp){
   #nrow(table_materials)
   table_materials$institutional_number
 }
-
-# list_material_lists <- function(){
-#   paste0(fname_materials, .Platform$file.sep, list.files(fname_materials, rec=T))
-# }
-
 
 #' get_material_total
 #'

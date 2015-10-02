@@ -1,3 +1,4 @@
+
 #' server_material_list
 #'
 #' Constructs table
@@ -10,9 +11,10 @@
 #' @author Reinhard Simon
 #' @export
 server_material_list <- function(input, output, session, dom="hot_materials", values){
+  #requireNamespace("magrittr")
   setHot_materials = function(x) values[["hot_materials"]] = x
-  setFile_materials = function(x) values[["file_materials"]] = x
-  setMat_list_sel = function(x) values[["mat_list_sel"]]
+  # setFile_materials = function(x) values[["file_materials"]] = x
+  # setMat_list_sel = function(x) values[["mat_list_sel"]]
 
   volumes <- shinyFiles::getVolumes()
 
@@ -23,51 +25,51 @@ server_material_list <- function(input, output, session, dom="hot_materials", va
   fp
 })
 
-output$mlist_fc <- renderText({
+output$mlist_fc <- shiny::renderText({
   rv_fp_ml()
 })
 
 
-shinyFileChoose(input, 'mlist_files', session = session,
+shinyFiles::shinyFileChoose(input, 'mlist_files', session = session,
                 roots = volumes , filetypes = c('', 'xlsx')
 )
 
 
 
-output$mlist_crop <- renderUI({
+output$mlist_crop <- shiny::renderUI({
   if(is.null(values[["hot_crops"]])){
     values[["hot_crops"]] <- fbcrops::get_crop_table()
   }
   crops <- values[["hot_crops"]]$crop_name
-  selectInput("mlist_crop", NULL, choices = crops, width = '50%')
+  shiny::selectInput("mlist_crop", NULL, choices = crops, width = '50%')
 })
 
-output$mlist_year <- renderUI({
-  chc <- fbcrops::list_years_for_crop(input$mlist_crop)
-  selectInput("mlist_year", NULL, choices = chc, width = '50%')
+output$mlist_year <- shiny::renderUI({
+  chc <- list_years_for_crop(input$mlist_crop)
+  shiny::selectInput("mlist_year", NULL, choices = chc, width = '50%')
 })
 
 
 
-output$mlist_name <- renderUI({
+output$mlist_name <- shiny::renderUI({
   chc <- list_material_lists(input$mlist_crop, input$mlist_year, TRUE)
-  selectInput("mlist_name", NULL, choices = chc, selected = 1)
+  shiny::selectInput("mlist_name", NULL, choices = chc, selected = 1)
 })
 
-output$mlist_year_new <- renderUI({
+output$mlist_year_new <- shiny::renderUI({
   ayear = input$mlist_year
-  selectInput("mlist_year_new", "Target year:", 2000:2050, width = '50%', selected = ayear)
+  shiny::selectInput("mlist_year_new", "Target year:", 2000:2050, width = '50%', selected = ayear)
 })
 
-output$selectMList <- renderUI({
+output$selectMList <- shiny::renderUI({
   lbl <-paste0("Save: ",input$mlist_crop,"/",
                input$mlist_year,"_",input$mlist_name)
 
-  actionButton("saveMListButton", lbl)
+  shiny::actionButton("saveMListButton", lbl)
 
 })
 
-observeEvent(input$doListButton, {
+shiny::observeEvent(input$doListButton, {
   if(input$mlist_choose_list_source == "List"){
     fn = input$mlist_name #file.path(fbglobal::fname_material_lists(), input$mlist_lists)
   } else {
@@ -81,7 +83,7 @@ observeEvent(input$doListButton, {
                          )
   if(res) {
     msg = paste("List", input$mlist_name_new, "created!")
-    output$new_list_success = renderText({
+    output$new_list_success = shiny::renderText({
       msg
     })
     output$messageMenu <- shinydashboard::renderMenu({
@@ -100,8 +102,8 @@ observeEvent(input$doListButton, {
   }
 })
 
-observeEvent(input$saveMListButton, {
-  table_materials = hot_to_r(input$hot_materials)
+shiny::observeEvent(input$saveMListButton, {
+  table_materials = rhandsontable::hot_to_r(input$hot_materials)
   if(!is.null(table_materials)){
     post_material_table(table_materials,
                         input$mlist_crop, input$mlist_year, input$mlist_name)
@@ -111,8 +113,8 @@ observeEvent(input$saveMListButton, {
 })
 
 
-output$hot_materials = renderRHandsontable({
-  withProgress(message = 'Loading table', {
+output$hot_materials = rhandsontable::renderRHandsontable({
+  shiny::withProgress(message = 'Loading table', {
   list_name <- input$mlist_name
   DF_materials <- get_material_table(input$mlist_crop,
                                      input$mlist_year,
@@ -120,15 +122,15 @@ output$hot_materials = renderRHandsontable({
 
   if(!is.null(DF_materials)){
     setHot_materials(DF_materials)
-    rhandsontable(DF_materials,   stretchH = "all") %>%
-      hot_table(highlightCol = TRUE, highlightRow = TRUE)
+    rhandsontable::rhandsontable(DF_materials,   stretchH = "all") %>%
+      rhandsontable::hot_table(highlightCol = TRUE, highlightRow = TRUE)
   } else {
     NULL
   }
 })
 })
 
-output$downloadMaterialListData <- downloadHandler(
+output$downloadMaterialListData <- shiny::downloadHandler(
   filename = function() {
     paste('germplasm_list-', input$mlist_crop,"_", input$mlist_year,"_",
           input$mlist_name, "_",
