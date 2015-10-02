@@ -8,5 +8,8 @@ License: GPL-3
 LazyData: true
 Suggests: testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    fbglobal,
+    readxl,
+    stringr
 VignetteBuilder: knitr
