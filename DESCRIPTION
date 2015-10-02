@@ -11,5 +11,11 @@ Suggests: testthat,
     rmarkdown,
     fbglobal,
     readxl,
-    stringr
+    stringr,
+    shiny,
+    shinydashboard,
+    rhandsontable,
+    shinyFiles,
+    shinyBS,
+    fbcrops
 VignetteBuilder: knitr

@@ -35,7 +35,14 @@ new_materials_table <- function(){
   out
 }
 
-#' get_materials_table
+get_full_table_name <- function(crop, year, mlist_name){
+  fns <- fbglobal::fname_material_lists()
+
+  fns <- file.path(fns, crop, paste0(year,"_", mlist_name))
+  fns
+}
+
+#' get_material_table
 #'
 #' always returns a table
 #'
@@ -45,17 +52,15 @@ new_materials_table <- function(){
 #' @return data.frame
 #' @author Reinhard Simon
 #' @export
-get_materials_table <- function(crop, year, mlist_name){
-  fns <- fbglobal::fname_material_lists()
-
-  fns <- file.path(fns, crop,
-                               paste0(year,"_", mlist_name))
+get_material_table <- function(crop, year, mlist_name){
+  fns <- get_full_table_name(crop, year, mlist_name)
 
   if(!file.exists(fns)) {
-    base_dir <-  dirname(fns)
-    if(!dir.exists(base_dir)) dir.create(base_dir, recursive = TRUE)
-    table_materials <- new_materials_table()
-    save(table_materials, file = fns, compress = "bzip2")
+    # base_dir <-  dirname(fns)
+    # if(!dir.exists(base_dir)) dir.create(base_dir, recursive = TRUE)
+    # table_materials <- new_materials_table()
+    # save(table_materials, file = fns, compress = "bzip2")
+    return(NULL)
   }
   load(fns)
   if(is.null(attr(table_materials, "crop")) || attr(table_materials, "crop") == "crop"){
@@ -77,12 +82,14 @@ get_materials_table <- function(crop, year, mlist_name){
 #' @param notes character
 #' @author Reinhard Simon
 #' @export
-post_material_table <- function(table_materials, crop, year, mlist_name, notes){
+post_material_table <- function(table_materials, crop, year, mlist_name, notes = NULL){
   fname <- file.path(fbglobal::fname_material_lists(), crop, paste0(year, "_",  mlist_name))
   attr(table_materials, "crop" ) <- crop
   attr(table_materials, "year" ) <- year
   attr(table_materials, "name" ) <- mlist_name
-  attr(table_materials, "notes" ) <- notes
+  if(!is.null(notes)){
+    attr(table_materials, "notes" ) <- notes
+  }
   save(table_materials, file = fname , compress = "bzip2")
 }
 
@@ -90,13 +97,53 @@ post_material_table <- function(table_materials, crop, year, mlist_name, notes){
 #'
 #' lists material-lists
 #'
+#' @param crop character
+#' @param year integer
+#' @param short short list name
 #' @return list
 #' @author Reinhard Simon
 #' @export
-list_material_lists <- function(){
+list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
   #list.files(fbglobal::fname_material_lists(), recursive = TRUE )
-  fns <- fbglobal::fname_material_lists()
-  paste0(fns, .Platform$file.sep, list.files(fns, recursive = TRUE))
+  if(is.null(crop)){
+    fns <- fbglobal::fname_material_lists()
+  } else {
+    fns <- file.path(fbglobal::fname_material_lists(), crop)
+  }
+
+
+  fns <- paste0(fns, .Platform$file.sep, list.files(fns, recursive = TRUE))
+
+  yr = paste0(year, "_")
+  if(!is.null(year)){
+    fy = stringr::str_detect(fns, yr)
+    fns = fns[fy]
+  }
+  if(short){
+    fns = basename(fns)
+    fns = stringr::str_replace(fns, yr, "")
+    if(fns[1] == crop) return("")
+  }
+
+   fns
+}
+
+#' list_years_for_crop
+#'
+#' list years
+#'
+#' @param crop character
+#' @return vector of integer
+#' @author Reinhard Simon
+#' @export
+list_years_for_crop <- function(crop){
+  x = list_material_lists(crop = crop, short = TRUE)
+  if(x[1] == crop) return(NULL)
+  x = stringr::str_sub(x, 1, 4)
+  if(!is.null(x)){
+    x = sort(unique(as.integer(x)))
+  }
+  x
 }
 
 #' import_list_from_prior
@@ -104,44 +151,35 @@ list_material_lists <- function(){
 #' Imports list from a prior one in the local database if no filename (fname)
 #' is given. Otherwise reads the file (in .xlsx format).
 #'
-#' @param crop character
-#' @param year integer
+#' @param crop character; crop
+#' @param year integer; source year
 #' @param fname an Excel file name
-#' @param mlist_name list name
+#' @param year_new integer; new year
+#' @param mlist_name list; new name
+#' @param notes character
 #' @return boolean TRUE if successful
 #' @author Reinhard Simon
 #' @export
-import_list_from_prior <- function(crop, year, fname=NULL, mlist_name=NULL){
+import_list_from_prior <- function( crop, year, fname=NULL, # source
+                                    year_new, mlist_name=NULL, notes = NULL # target; crop same
+                                    ){
   stopifnot(!is.null(fname))
   stopifnot(!is.null(mlist_name))
-
-  dp <- file.path(fbglobal::fname_material_lists(), crop)
-  # print(paste("fname",fname))
-  # print(paste("dp", dp))
-
-  if(!dir.exists(dp)) dir.create(dp)
-  dp <- file.path(dp, paste0(year, "_",mlist_name))
-  # print(paste("dp", dp))
   out = FALSE
 
+  table_materials = NULL
   try({
   if(stringr::str_detect(fname, ".xlsx")){
-
     table_materials <- readxl::read_excel(fname, "materials")
-    save(table_materials, file = dp)
-    # print("excel")
-    # print(dp)
+    out = TRUE
+  } else {
+    fname = get_full_table_name(crop, year, fname)
+  }
+  if(file.exists(fname)) {
+    load(fname)
     out = TRUE
   }
-
-  fname <- file.path(fbglobal::fname_material_lists(), crop, fname)
-#  print(paste("fname",fname))
-  if(file.exists(fname) && !file.exists(dp)) {
-    file.copy(fname, dp)
-    out = TRUE
-    # print("list")
-    # print(dp)
-  }
+  post_material_table(table_materials, crop, year, mlist_name, notes)
   })
   out
 }
