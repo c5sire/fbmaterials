@@ -2,7 +2,7 @@
 % Please edit documentation in R/ui_material_list_params.R
 \name{ui_material_list_params}
 \alias{ui_material_list_params}
-\title{ui_material_list_params}
+\title{UI material list paramters}
 \usage{
 ui_material_list_params(name = "resource_material_list")
 }

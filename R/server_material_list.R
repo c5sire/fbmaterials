@@ -1,3 +1,20 @@
+# textInputRow<-function (inputId, label, value = "")
+# {
+#   div(style="display:inline-block",
+#       tags$label(label, `for` = inputId),
+#       tags$input(id = inputId, type = "text", value = value,class="input-small"))
+# }
+#
+# selectInputRow<-function (inputId, label, choices, selected = NULL, ...)
+# {
+#   div(style="display:inline-block",
+#       tags$label(label, `for` = inputId),
+#       tags$input(id = inputId, type = "select", class="input-small",
+#                  choices = choices, selected = selected, ...))
+# }
+#
+
+
 
 #' server_material_list
 #'
@@ -11,8 +28,8 @@
 #' @author Reinhard Simon
 #' @export
 server_material_list <- function(input, output, session, dom="hot_materials", values){
-  #requireNamespace("magrittr")
-  setHot_materials = function(x) values[["hot_materials"]] = x
+  requireNamespace("magrittr")
+  setHot_materials = function(x) values[[dom]] = x
   # setFile_materials = function(x) values[["file_materials"]] = x
   # setMat_list_sel = function(x) values[["mat_list_sel"]]
 
@@ -23,7 +40,7 @@ server_material_list <- function(input, output, session, dom="hot_materials", va
   fp <- shinyFiles::parseFilePaths( roots, input$mlist_files)$datapath
   fp <- stringr::str_replace(fp, "NA", "")
   fp
-})
+  })
 
 output$mlist_fc <- shiny::renderText({
   rv_fp_ml()
@@ -53,8 +70,25 @@ output$mlist_year <- shiny::renderUI({
 
 output$mlist_name <- shiny::renderUI({
   chc <- list_material_lists(input$mlist_crop, input$mlist_year, TRUE)
-  shiny::selectInput("mlist_name", NULL, choices = chc, selected = 1)
+  if (chc[1] != ""){
+    shiny::selectInput("mlist_name", NULL, choices = chc, selected = 1)
+  }
 })
+
+output$mlist_butSave <- shiny::renderUI({
+  chc <- list_material_lists(input$mlist_crop, input$mlist_year, TRUE)
+  if (chc[1] != ""){
+    shiny::actionButton("saveMListButton", "Save", inline = TRUE)
+  }
+})
+
+output$mlist_butExport <- shiny::renderUI({
+  chc <- list_material_lists(input$mlist_crop, input$mlist_year, TRUE)
+  if (chc[1] != ""){
+    shiny::downloadButton("downloadMaterialListData", "Export")
+  }
+})
+
 
 output$mlist_year_new <- shiny::renderUI({
   ayear = input$mlist_year
@@ -70,40 +104,42 @@ output$selectMList <- shiny::renderUI({
 })
 
 shiny::observeEvent(input$doListButton, {
-  if(input$mlist_choose_list_source == "List"){
+  if (input$mlist_choose_list_source == "List"){
     fn = input$mlist_name #file.path(fbglobal::fname_material_lists(), input$mlist_lists)
   } else {
     fn = rv_fp_ml()
   }
 
-  res <- import_list_from_prior(crop = input$mlist_crop, year = input$mlist_year, fname = fn,
+  res <- import_list_from_prior(crop = input$mlist_crop, year = input$mlist_year,
+                                fname = fn,
                          year_new = input$mlist_year_new,
                          mlist_name = input$mlist_name_new,
                          notes = input$mlist_notes_new
                          )
-  if(res) {
-    msg = paste("List", input$mlist_name_new, "created!")
-    output$new_list_success = shiny::renderText({
-      msg
-    })
-    output$messageMenu <- shinydashboard::renderMenu({
-      # Code to generate each of the messageItems here, in a list. This assumes
-      # that messageData is a data frame with two columns, 'from' and 'message'.
-      # msgs <- apply(messageData, 1, function(row) {
-      #   messageItem(from = row[["from"]], message = row[["message"]])
-      # })
-
-      # This is equivalent to calling:
-      #   dropdownMenu(type="messages", msgs[[1]], msgs[[2]], ...)
-      #dropdownMenu(type = "messages", .list = msgs)
-      msg <- shinydashboard::messageItem("HIDAP4RTB", msg)
-      shinydashboard::dropdownMenu(msg, type = "messages")
-    })
-  }
+  # if(res) {
+  #   msg = paste("List", input$mlist_name_new, "created!")
+  #   output$new_list_success = shiny::renderText({
+  #     msg
+  #   })
+  #   output$messageMenu <- shinydashboard::renderMenu({
+  #     # Code to generate each of the messageItems here, in a list. This assumes
+  #     # that messageData is a data frame with two columns, 'from' and 'message'.
+  #     # msgs <- apply(messageData, 1, function(row) {
+  #     #   messageItem(from = row[["from"]], message = row[["message"]])
+  #     # })
+  #
+  #     # This is equivalent to calling:
+  #     #   dropdownMenu(type="messages", msgs[[1]], msgs[[2]], ...)
+  #     #dropdownMenu(type = "messages", .list = msgs)
+  #     #msg <- shinydashboard::messageItem("HIDAP4RTB", msg)
+  #     #shinydashboard::dropdownMenu(msg, type = "messages")
+  #   })
+  # }
 })
 
 shiny::observeEvent(input$saveMListButton, {
   table_materials = rhandsontable::hot_to_r(input$hot_materials)
+  #print(str(table_materials))
   if(!is.null(table_materials)){
     post_material_table(table_materials,
                         input$mlist_crop, input$mlist_year, input$mlist_name)

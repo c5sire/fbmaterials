@@ -37,7 +37,8 @@ new_materials_table <- function(){
 
 get_full_table_name <- function(crop, year, mlist_name){
   fns <- fbglobal::fname_material_lists()
-
+  if (is.null(fns)) return(NULL)
+  if (length(fns) < 1) return(NULL)
   fns <- file.path(fns, crop, paste0(year,"_", mlist_name))
   fns
 }
@@ -54,8 +55,10 @@ get_full_table_name <- function(crop, year, mlist_name){
 #' @export
 get_material_table <- function(crop, year, mlist_name){
   fns <- get_full_table_name(crop, year, mlist_name)
-
-  if(!file.exists(fns)) {
+  #print(fns)
+  if (is.null(fns)) return(NULL)
+  if (length(fns) < 1) return(NULL)
+  if (!file.exists(fns)) {
     # base_dir <-  dirname(fns)
     # if(!dir.exists(base_dir)) dir.create(base_dir, recursive = TRUE)
     # table_materials <- new_materials_table()
@@ -122,6 +125,11 @@ list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
   if(short){
     fns = basename(fns)
     fns = stringr::str_replace(fns, yr, "")
+    if(is.null(fns)) return("")
+    #print(fns)
+    #print(crop)
+    if(is.null(crop)) return("")
+    if(is.na(fns[1])) return("")
     if(fns[1] == crop) return("")
   }
 
@@ -137,11 +145,17 @@ list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
 #' @author Reinhard Simon
 #' @export
 list_years_for_crop <- function(crop){
+  out = 2015 # replace with current year
   x = list_material_lists(crop = crop, short = TRUE)
-  if(x[1] == crop) return(NULL)
+  if(x[1] == "") return(out)
+  if (is.null(crop)) return(out)
+  if (length(crop) <  1) return(out)
+  if (x[1] == crop) return(out)
   x = stringr::str_sub(x, 1, 4)
   if(!is.null(x)){
     x = sort(unique(as.integer(x)))
+  } else {
+    x = 2015
   }
   x
 }

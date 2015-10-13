@@ -1,4 +1,4 @@
-#' ui_material_list_params
+#' UI material list paramters
 #'
 #' An interface to parameters
 #'
@@ -8,15 +8,21 @@
 ui_material_list_params <- function(name = "resource_material_list"){
   shiny::conditionalPanel(
     paste0("input.menu == '",name,"'"),
-    shiny::uiOutput("mlist_crop"),
-    shiny::uiOutput("mlist_year"),
+    #shiny::HTML("<center>"),
+    shiny::uiOutput("mlist_crop", inline = TRUE),
+    shiny::uiOutput("mlist_year", inline = TRUE),
+    #shiny::HTML("</center>"),
     shiny::uiOutput("mlist_name"),
 
     shiny::HTML("<center>"),
     shinyBS::bsAlert("saveMaterialListAlert"),
-    shiny::actionButton("saveMListButton", "Save!"),
-    shiny::actionButton("butNewMaterials", "New!"),
-    shiny::downloadButton("downloadMaterialListData", "Export!"),
+    shiny::uiOutput("mlist_butSave", inline = TRUE),
+
+    #shiny::actionButton("saveMListButton", "Save"),
+    shiny::actionButton("butNewMaterials", "New", inline = TRUE),
+
+    shiny::uiOutput("mlist_butExport", inline = TRUE),
+    #shiny::downloadButton("downloadMaterialListData", "Export"),
     shiny::HTML("</center>")
   )
 }

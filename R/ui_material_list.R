@@ -21,6 +21,8 @@ ui_material_list <- function(type = "tab", title = "Material list configuration"
           shinyBS::bsModal("bsModalListParam", "Define a new list of plant materials",
                            #paste0("input.menu == '",name,"'"),
                            "butNewMaterials", size = "small",
+                           #shiny::HTML("<i>Hi</i>")
+
                            shiny::uiOutput("mlist_year_new", inline = TRUE),
                            shiny::textInput("mlist_name_new", NULL, "A unique list name"),
                            shiny::textInput("mlist_notes_new", NULL, "Description"),
@@ -33,5 +35,7 @@ ui_material_list <- function(type = "tab", title = "Material list configuration"
                            shiny::textOutput("new_list_success"),
                            shiny::actionButton("doListButton", "Create new list!")
           )
+
+
       )
 }
