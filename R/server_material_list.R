@@ -79,13 +79,13 @@ output$mlist_year_new <- shiny::renderUI({
   shiny::selectInput("mlist_year_new", "Target year:", 2000:2050, width = '50%', selected = ayear)
 })
 
-output$selectMList <- shiny::renderUI({
-  lbl <-paste0("Save: ",input$mlist_crop,"/",
-               input$mlist_year,"_",input$mlist_name)
-
-  shiny::actionButton("saveMListButton", lbl)
-
-})
+# output$selectMList <- shiny::renderUI({
+#   lbl <-paste0("Save: ",input$mlist_crop,"/",
+#                input$mlist_year,"_",input$mlist_name)
+#
+#   shiny::actionButton("saveMListButton", lbl)
+#
+# })
 
 shiny::observeEvent(input$doListButton, ({
   #if(is.null(input$doListButton)) return(NULL)
@@ -125,18 +125,18 @@ shiny::observeEvent(input$doListButton, ({
   # }
 
 shiny::observeEvent(input$saveMListButton, ({
-  if(is.null(input$saveMListButton)) return(NULL)
-  table_materials = rhandsontable::hot_to_r(input$hot_materials)
-  #print(str(table_materials))
-  if (!is.null(table_materials)) {
-    #shinyjs::info("Saved list!")
+
+  if (!is.null(input[[dom]])) {
+    print("hi!")
+    #table_materials = rhandsontable::hot_to_r(input$hot_materials)
+    table_materials = rhandsontable::hot_to_r(input[[dom]])
+    #})
+    print(str(table_materials))
+
     post_material_table(table_materials,
                         input$mlist_crop, input$mlist_year, input$mlist_name)
-
-    # shinyBS::createAlert(session, "saveMaterialListAlert", "saveMLAlert", title = "Note",
-    #              content = "List of plant materials saved.", append = FALSE)
   }
-}), suspended = TRUE
+})
 )
 
 
@@ -149,8 +149,8 @@ output$hot_materials = rhandsontable::renderRHandsontable({
 
   if(!is.null(DF_materials)){
     setHot_materials(DF_materials)
-    rhandsontable::rhandsontable(DF_materials,   stretchH = "all") %>%
-      rhandsontable::hot_table(highlightCol = TRUE, highlightRow = TRUE)
+    rh <- rhandsontable::rhandsontable(DF_materials,   stretchH = "all")
+    rhandsontable::hot_table(rh, highlightCol = TRUE, highlightRow = TRUE)
   } else {
     NULL
   }
