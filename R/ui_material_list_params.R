@@ -8,10 +8,8 @@
 ui_material_list_params <- function(name = "resource_material_list"){
   shiny::conditionalPanel(
     paste0("input.menu == '",name,"'"),
-    #shiny::HTML("<center>"),
     shiny::uiOutput("mlist_crop", inline = TRUE),
     shiny::uiOutput("mlist_year", inline = TRUE),
-    #shiny::HTML("</center>"),
     shiny::uiOutput("mlist_name"),
 
     shiny::HTML("<center>"),

@@ -1,22 +1,4 @@
-# textInputRow<-function (inputId, label, value = "")
-# {
-#   div(style="display:inline-block",
-#       tags$label(label, `for` = inputId),
-#       tags$input(id = inputId, type = "text", value = value,class="input-small"))
-# }
-#
-# selectInputRow<-function (inputId, label, choices, selected = NULL, ...)
-# {
-#   div(style="display:inline-block",
-#       tags$label(label, `for` = inputId),
-#       tags$input(id = inputId, type = "select", class="input-small",
-#                  choices = choices, selected = selected, ...))
-# }
-#
-
-
-
-#' server_material_list
+#'  server_material_list
 #'
 #' Constructs table
 #'
@@ -78,7 +60,9 @@ output$mlist_name <- shiny::renderUI({
 output$mlist_butSave <- shiny::renderUI({
   chc <- list_material_lists(input$mlist_crop, input$mlist_year, TRUE)
   if (chc[1] != ""){
+
     shiny::actionButton("saveMListButton", "Save", inline = TRUE)
+
   }
 })
 
@@ -103,19 +87,23 @@ output$selectMList <- shiny::renderUI({
 
 })
 
-shiny::observeEvent(input$doListButton, {
-  if (input$mlist_choose_list_source == "List"){
+shiny::observeEvent(input$doListButton, ({
+  #if(is.null(input$doListButton)) return(NULL)
+  if (input$mlist_choose_list_source == "List") {
     fn = input$mlist_name #file.path(fbglobal::fname_material_lists(), input$mlist_lists)
   } else {
     fn = rv_fp_ml()
   }
 
-  res <- import_list_from_prior(crop = input$mlist_crop, year = input$mlist_year,
+  import_list_from_prior(crop = input$mlist_crop, year = input$mlist_year,
                                 fname = fn,
                          year_new = input$mlist_year_new,
                          mlist_name = input$mlist_name_new,
                          notes = input$mlist_notes_new
                          )
+}), suspended = TRUE
+)
+
   # if(res) {
   #   msg = paste("List", input$mlist_name_new, "created!")
   #   output$new_list_success = shiny::renderText({
@@ -135,18 +123,21 @@ shiny::observeEvent(input$doListButton, {
   #     #shinydashboard::dropdownMenu(msg, type = "messages")
   #   })
   # }
-})
 
-shiny::observeEvent(input$saveMListButton, {
+shiny::observeEvent(input$saveMListButton, ({
+  if(is.null(input$saveMListButton)) return(NULL)
   table_materials = rhandsontable::hot_to_r(input$hot_materials)
   #print(str(table_materials))
-  if(!is.null(table_materials)){
+  if (!is.null(table_materials)) {
+    #shinyjs::info("Saved list!")
     post_material_table(table_materials,
                         input$mlist_crop, input$mlist_year, input$mlist_name)
+
     # shinyBS::createAlert(session, "saveMaterialListAlert", "saveMLAlert", title = "Note",
-    #             content = "List of plant materials saved.", append = FALSE)
+    #              content = "List of plant materials saved.", append = FALSE)
   }
-})
+}), suspended = TRUE
+)
 
 
 output$hot_materials = rhandsontable::renderRHandsontable({
