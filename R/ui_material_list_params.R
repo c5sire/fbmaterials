@@ -15,12 +15,8 @@ ui_material_list_params <- function(name = "resource_material_list"){
     shiny::HTML("<center>"),
     shinyBS::bsAlert("saveMaterialListAlert"),
     shiny::uiOutput("mlist_butSave", inline = TRUE),
-
-    #shiny::actionButton("saveMListButton", "Save"),
     shiny::actionButton("butNewMaterials", "New", inline = TRUE),
-
     shiny::uiOutput("mlist_butExport", inline = TRUE),
-    #shiny::downloadButton("downloadMaterialListData", "Export"),
     shiny::HTML("</center>")
   )
 }

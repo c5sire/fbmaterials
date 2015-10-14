@@ -59,14 +59,11 @@ get_material_table <- function(crop, year, mlist_name){
   if (is.null(fns)) return(NULL)
   if (length(fns) < 1) return(NULL)
   if (!file.exists(fns)) {
-    # base_dir <-  dirname(fns)
-    # if(!dir.exists(base_dir)) dir.create(base_dir, recursive = TRUE)
-    # table_materials <- new_materials_table()
-    # save(table_materials, file = fns, compress = "bzip2")
     return(NULL)
   }
-  load(fns)
-  if(is.null(attr(table_materials, "crop")) || attr(table_materials, "crop") == "crop"){
+  #load(fns)
+  table_materials <- readRDS(fns)
+  if (is.null(attr(table_materials, "crop")) || attr(table_materials, "crop") == "crop") {
     attr(table_materials, "crop" ) <- crop
     attr(table_materials, "year" ) <- year
     attr(table_materials, "name" ) <- mlist_name
