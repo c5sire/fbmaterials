@@ -12,8 +12,6 @@
 server_material_list <- function(input, output, session, dom="hot_materials", values){
   requireNamespace("magrittr")
   setHot_materials = function(x) values[[dom]] = x
-  # setFile_materials = function(x) values[["file_materials"]] = x
-  # setMat_list_sel = function(x) values[["mat_list_sel"]]
 
   volumes <- shinyFiles::getVolumes()
 
@@ -79,13 +77,6 @@ output$mlist_year_new <- shiny::renderUI({
   shiny::selectInput("mlist_year_new", "Target year:", 2000:2050, width = '50%', selected = ayear)
 })
 
-# output$selectMList <- shiny::renderUI({
-#   lbl <-paste0("Save: ",input$mlist_crop,"/",
-#                input$mlist_year,"_",input$mlist_name)
-#
-#   shiny::actionButton("saveMListButton", lbl)
-#
-# })
 
 shiny::observeEvent(input$doListButton, ({
   #if(is.null(input$doListButton)) return(NULL)
@@ -104,35 +95,10 @@ shiny::observeEvent(input$doListButton, ({
 }), suspended = TRUE
 )
 
-  # if(res) {
-  #   msg = paste("List", input$mlist_name_new, "created!")
-  #   output$new_list_success = shiny::renderText({
-  #     msg
-  #   })
-  #   output$messageMenu <- shinydashboard::renderMenu({
-  #     # Code to generate each of the messageItems here, in a list. This assumes
-  #     # that messageData is a data frame with two columns, 'from' and 'message'.
-  #     # msgs <- apply(messageData, 1, function(row) {
-  #     #   messageItem(from = row[["from"]], message = row[["message"]])
-  #     # })
-  #
-  #     # This is equivalent to calling:
-  #     #   dropdownMenu(type="messages", msgs[[1]], msgs[[2]], ...)
-  #     #dropdownMenu(type = "messages", .list = msgs)
-  #     #msg <- shinydashboard::messageItem("HIDAP4RTB", msg)
-  #     #shinydashboard::dropdownMenu(msg, type = "messages")
-  #   })
-  # }
 
 shiny::observeEvent(input$saveMListButton, ({
-
   if (!is.null(input[[dom]])) {
-    print("hi!")
-    #table_materials = rhandsontable::hot_to_r(input$hot_materials)
     table_materials = rhandsontable::hot_to_r(input[[dom]])
-    #})
-    print(str(table_materials))
-
     post_material_table(table_materials,
                         input$mlist_crop, input$mlist_year, input$mlist_name)
   }
