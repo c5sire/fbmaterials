@@ -1,7 +1,7 @@
 context("Material lists")
 
 tbl_new <- new_materials_table()
-tbl_get <- get_material_table("potato", 2000, "TEST050")
+tbl_get <- get_material_table("potato", 2000, "aaaa")
 
 test_that("Dummy table is created.", {
   expect_true(is.data.frame(tbl_new), TRUE)
