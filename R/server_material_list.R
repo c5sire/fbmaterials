@@ -1,3 +1,39 @@
+getVolumes <- function(exclude = NULL){
+
+    osSystem <- Sys.info()["sysname"]
+    if (osSystem == "Darwin") {
+      volumes <- list.files("/Volumes/", full.names = T)
+      names(volumes) <- basename(volumes)
+    }
+    else if (osSystem == "Linux") {
+      volumes <- c(Computer = "/")
+      media <- list.files("/media/", full.names = T)
+      names(media) <- basename(media)
+      volumes <- c(volumes, media)
+    }
+    else if (osSystem == "Windows") {
+      volumes <- system("wmic logicaldisk get Caption", intern = T)
+      volumes <- sub(" *\\r$", "", volumes)
+      keep <- !tolower(volumes) %in% c("caption", "")
+      volumes <- volumes[keep]
+      volNames <- system("wmic logicaldisk get VolumeName",
+                         intern = T)
+      volNames <- sub(" *\\r$", "", volNames)
+      volNames <- volNames[keep]
+      volNames <- paste0(volNames, " (", volumes, ")")
+      names(volumes) <- volNames
+    }
+    else {
+      stop("unsupported OS")
+    }
+    if (!is.null(exclude)) {
+      volumes <- volumes[!names(volumes) %in% exclude]
+    }
+    volumes
+
+}
+
+
 #'  server_material_list
 #'
 #' Constructs table
@@ -10,26 +46,29 @@
 #' @author Reinhard Simon
 #' @export
 server_material_list <- function(input, output, session, dom="hot_materials", values){
-  requireNamespace("magrittr")
+  #requireNamespace("magrittr")
   setHot_materials = function(x) values[[dom]] = x
+  roots = getVolumes("Page File (F:)")
+  #print(roots)
+  shinyFiles::shinyFileChoose(input, 'mlist_files', session=session, roots=roots,
+          filetypes=c('', '.xlsx'))
 
-  volumes <- shinyFiles::getVolumes()
+  # rv_fp_ml <- shiny::reactive({
+  #   fp <- shinyFiles::parseFilePaths( roots, input$mlist_files)$datapath
+  #   #fp <- stringr::str_replace(fp, "NA", "")
+  #   fp
+  # })
 
-  rv_fp_ml <- shiny::reactive({
-  roots = c(wd = ".")
-  fp <- shinyFiles::parseFilePaths( roots, input$mlist_files)$datapath
-  fp <- stringr::str_replace(fp, "NA", "")
-  fp
-  })
-
-output$mlist_fc <- shiny::renderText({
-  rv_fp_ml()
-})
-
-
-shinyFiles::shinyFileChoose(input, 'mlist_files', session = session,
-                roots = volumes , filetypes = c('', 'xlsx')
-)
+  rf_fp_ml <- function(){"D:"}
+#
+# output$mlist_fc <- shiny::renderText({
+#   rv_fp_ml()
+# })
+#
+#
+# shinyFiles::shinyFileChoose(input, 'mlist_files', session = session,
+#                 roots = volumes , filetypes = c('', 'xlsx')
+# )
 
 
 
