@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinyFiles)
+library(rhandsontable)
 library(shinyBS)
 
 ui <- dashboardPage(skin = "yellow",

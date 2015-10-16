@@ -1,38 +1,38 @@
-getVolumes <- function(exclude = NULL){
-
-    osSystem <- Sys.info()["sysname"]
-    if (osSystem == "Darwin") {
-      volumes <- list.files("/Volumes/", full.names = T)
-      names(volumes) <- basename(volumes)
-    }
-    else if (osSystem == "Linux") {
-      volumes <- c(Computer = "/")
-      media <- list.files("/media/", full.names = T)
-      names(media) <- basename(media)
-      volumes <- c(volumes, media)
-    }
-    else if (osSystem == "Windows") {
-      volumes <- system("wmic logicaldisk get Caption", intern = T)
-      volumes <- sub(" *\\r$", "", volumes)
-      keep <- !tolower(volumes) %in% c("caption", "")
-      volumes <- volumes[keep]
-      volNames <- system("wmic logicaldisk get VolumeName",
-                         intern = T)
-      volNames <- sub(" *\\r$", "", volNames)
-      volNames <- volNames[keep]
-      volNames <- paste0(volNames, " (", volumes, ")")
-      names(volumes) <- volNames
-    }
-    else {
-      stop("unsupported OS")
-    }
-    if (!is.null(exclude)) {
-      volumes <- volumes[!names(volumes) %in% exclude]
-    }
-    volumes
-
-}
-
+# getVolumes <- function(exclude = NULL){
+#
+#     osSystem <- Sys.info()["sysname"]
+#     if (osSystem == "Darwin") {
+#       volumes <- list.files("/Volumes/", full.names = T)
+#       names(volumes) <- basename(volumes)
+#     }
+#     else if (osSystem == "Linux") {
+#       volumes <- c(Computer = "/")
+#       media <- list.files("/media/", full.names = T)
+#       names(media) <- basename(media)
+#       volumes <- c(volumes, media)
+#     }
+#     else if (osSystem == "Windows") {
+#       volumes <- system("wmic logicaldisk get Caption", intern = T)
+#       volumes <- sub(" *\\r$", "", volumes)
+#       keep <- !tolower(volumes) %in% c("caption", "")
+#       volumes <- volumes[keep]
+#       volNames <- system("wmic logicaldisk get VolumeName",
+#                          intern = T)
+#       volNames <- sub(" *\\r$", "", volNames)
+#       volNames <- volNames[keep]
+#       volNames <- paste0(volNames, " (", volumes, ")")
+#       names(volumes) <- volNames
+#     }
+#     else {
+#       stop("unsupported OS")
+#     }
+#     if (!is.null(exclude)) {
+#       volumes <- volumes[!names(volumes) %in% exclude]
+#     }
+#     volumes
+#
+# }
+#
 
 #'  server_material_list
 #'
@@ -46,11 +46,12 @@ getVolumes <- function(exclude = NULL){
 #' @author Reinhard Simon
 #' @export
 server_material_list <- function(input, output, session, dom="hot_materials", values){
-  #requireNamespace("magrittr")
   setHot_materials = function(x) values[[dom]] = x
-  roots = getVolumes("Page File (F:)")
+  roots = shinyFiles::getVolumes("Page File (F:)")
   #print(roots)
-  shinyFiles::shinyFileChoose(input, 'mlist_files', session=session, roots=roots,
+  shinyFiles::shinyFileChoose(input, 'mlist_files', session=session,
+          #roots=roots,
+          roots = roots,
           filetypes=c('', '.xlsx'))
 
   # rv_fp_ml <- shiny::reactive({
@@ -59,17 +60,7 @@ server_material_list <- function(input, output, session, dom="hot_materials", va
   #   fp
   # })
 
-  rf_fp_ml <- function(){"D:"}
-#
-# output$mlist_fc <- shiny::renderText({
-#   rv_fp_ml()
-# })
-#
-#
-# shinyFiles::shinyFileChoose(input, 'mlist_files', session = session,
-#                 roots = volumes , filetypes = c('', 'xlsx')
-# )
-
+  rv_fp_ml <- function(){"D:"}
 
 
 output$mlist_crop <- shiny::renderUI({
