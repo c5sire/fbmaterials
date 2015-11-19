@@ -85,6 +85,10 @@ get_material_table <- function(crop, year, mlist_name){
 #' @export
 post_material_table <- function(table_materials, crop, year, mlist_name, notes = NULL){
   fname <- file.path(fbglobal::fname_material_lists(crop),  paste0(year, "_",  mlist_name))
+  fdir <- dirname(fname)
+  if(!dir.exists(fdir)){
+    dir.create(fdir, recursive = TRUE)
+  }
   attr(table_materials, "crop" ) <- crop
   attr(table_materials, "year" ) <- year
   attr(table_materials, "name" ) <- mlist_name
