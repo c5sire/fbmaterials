@@ -14,7 +14,7 @@ get_material_total(crop = "all")
 \description{
 Counts total number of unique plant materials
 
-get materials total
+get materials total.
 }
 \author{
 Reinhard Simon

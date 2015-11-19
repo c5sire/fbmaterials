@@ -1,3 +1,10 @@
+#' get fieldboook list
+#'
+#' get fieldbook list
+#'
+#' @param crop a crop
+#' @param name_only only name
+#' @param full_path full path
 #' @export
 get_fieldbook_list <- function(crop="all", name_only = FALSE, full_path = FALSE){
   bp = fbglobal::get_base_dir()
@@ -18,6 +25,11 @@ get_fieldbook_list <- function(crop="all", name_only = FALSE, full_path = FALSE)
   lf
 }
 
+#' exists fieldbook
+#'
+#' exists fieldbook
+#'
+#' @param crop a crop
 #' @export
 exists_fieldbook <- function(crop) {
   lf <- fbmaterials::get_fieldbook_list(crop = crop)
@@ -26,6 +38,8 @@ exists_fieldbook <- function(crop) {
 
 
 #' get fieldbook total
+#'
+#' get fieldbook total.
 #'
 #' @param crop a crop name or 'all' (default)
 #' @author Reinhard Simon
@@ -41,7 +55,9 @@ get_materials <- function(file_path){
   meta$materials
 }
 
-#' get materials total
+#' get_material_total
+#'
+#' get materials total.
 #'
 #' @param crop a crop name or 'all' (default)
 #' @author Reinhard Simon
@@ -74,6 +90,7 @@ get_fieldbook_list_by_loc <- function(loc){
 
 #' get fieldbook data
 #'
+#' Getting data.
 #'
 #' @param aname of a fieldbook (unique)
 #' @export
@@ -112,16 +129,50 @@ get_genotype_list_by_loc <- function(loc){
   lst
 }
 
+
+#' get unique genotypes by location
+#'
+#' (up to hundred)
+#'
+#' @param loc location short name
+#' @export
+get_genotype_list_by_loc <- function(loc){
+  lf <- get_fieldbook_list(full_path = TRUE, name_only = FALSE)
+  lf <- lf[stringr::str_detect(toupper(lf), toupper(loc))]
+  n = length(lf)
+  lst = "none"
+  if(n > 0){
+    lst = character()
+    for(i in 1:n){
+      fb <- readRDS(lf[i])
+      meta <- attr(fb, "meta")
+      lst = c(lst, meta$materials)
+    }
+    lst = sort(unique(lst))
+  }
+  lst
+}
+
+
+
 get_last_factor_index <- function(trial_name) {
   if(trial_name == "" | is.na(trial_name)) return(-1)
   bp <- fbglobal::get_base_dir()
-  ls <- list.files(bp, pattern = trial_name, recursive = TRUE, full.names = TRUE)
+
+  #TODO now lists also material lists after fieldbooks; so fieldbook is first
+  # TODO explizit filtering
+  ls <- list.files(bp, pattern = trial_name, recursive = TRUE, full.names = TRUE)[1]
   fb <- readRDS(ls)
   nm <- names(fb)
   fl <- which(nm == "CODE" | nm == "INSTN" | nm == "GENOTYPE" | nm == "PED1")
   list(nm = nm, fl = fl)
 }
 
+#' get trial factors
+#'
+#' get trial factors.
+#'
+#' @param trial_name a trial name
 #' @export
 get_trial_factors <- function(trial_name){
   fl <- get_last_factor_index(trial_name)
@@ -129,6 +180,11 @@ get_trial_factors <- function(trial_name){
   fl$nm[1:fl$fl[length(fl$fl)]]
 }
 
+#' get trial variables
+#'
+#' get trial variables.
+#'
+#' @param trial_name a trial name
 #' @export
 get_trial_variables <- function(trial_name){
   fl <- get_last_factor_index(trial_name)

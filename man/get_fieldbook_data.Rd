@@ -10,6 +10,6 @@ get_fieldbook_data(aname)
 \item{aname}{of a fieldbook (unique)}
 }
 \description{
-get fieldbook data
+Getting data.
 }
 

@@ -5,11 +5,17 @@
 \title{get unique genotypes by location}
 \usage{
 get_genotype_list_by_loc(loc)
+
+get_genotype_list_by_loc(loc)
 }
 \arguments{
 \item{loc}{location short name}
+
+\item{loc}{location short name}
 }
 \description{
+(up to hundred)
+
 (up to hundred)
 }
 

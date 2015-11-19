@@ -26,6 +26,29 @@ server_material_list <- function(input, output, session, dom="hot_materials", va
 
   rv_fp_ml <- function(){"D:"}
 
+  get_ml_list_crop <- reactive({
+    fbl <- values[["ml_list_crop"]]
+    #print(fbl)
+    if(is.null(fbl)) {
+      fbl <- fbmaterials::list_years_for_crop(input$mlist_crop)
+    }
+    #print(fbl)
+    fbl
+  })
+
+  get_ml_list_crop_year <- reactive({
+    fbl <- values[["ml_list_crop_year"]]
+    #print(fbl)
+    if(is.null(fbl)) {
+      fbl <- fbmaterials::list_material_lists(input$mlist_crop,
+                                              input$mlist_year,
+                                              TRUE
+                                                )
+    }
+    #print(fbl)
+    fbl
+  })
+
 
 output$mlist_crop <- shiny::renderUI({
   if(is.null(values[["hot_crops"]])){
@@ -36,14 +59,16 @@ output$mlist_crop <- shiny::renderUI({
 })
 
 output$mlist_year <- shiny::renderUI({
-  chc <- list_years_for_crop(input$mlist_crop)
+  #chc <- list_years_for_crop(input$mlist_crop)
+  chc <- get_ml_list_crop()
   shiny::selectInput("mlist_year", NULL, choices = chc, width = '50%')
 })
 
 
 
 output$mlist_name <- shiny::renderUI({
-  chc <- list_material_lists(input$mlist_crop, input$mlist_year, TRUE)
+  #chc <- list_material_lists(input$mlist_crop, input$mlist_year, TRUE)
+  chc <- get_ml_list_crop_year()
   if (chc[1] != ""){
     shiny::selectInput("mlist_name", NULL, choices = chc, selected = 1)
   }
@@ -74,11 +99,14 @@ output$mlist_year_new <- shiny::renderUI({
 
 shiny::observeEvent(input$doListButton, ({
   #if(is.null(input$doListButton)) return(NULL)
+  #print(input$mlist_name)
   if (input$mlist_choose_list_source == "List") {
-    fn = input$mlist_name #file.path(fbglobal::fname_material_lists(), input$mlist_lists)
+    fn = input$mlist_name #
+    #fn <- file.path(fbglobal::fname_material_lists(), input$mlist_lists)
   } else {
     fn = rv_fp_ml()
   }
+  #print(fn)
 
   import_list_from_prior(crop = input$mlist_crop, year = input$mlist_year,
                                 fname = fn,
@@ -86,7 +114,9 @@ shiny::observeEvent(input$doListButton, ({
                          mlist_name = input$mlist_name_new,
                          notes = input$mlist_notes_new
                          )
-}), suspended = TRUE
+  values[["ml_list_crop_year"]] <- NULL
+  output$new_list_success = renderText(paste(input$mlist_name_new, "created!"))
+})#, suspended = TRUE
 )
 
 
@@ -95,6 +125,9 @@ shiny::observeEvent(input$saveMListButton, ({
     table_materials = rhandsontable::hot_to_r(input[[dom]])
     post_material_table(table_materials,
                         input$mlist_crop, input$mlist_year, input$mlist_name)
+    # The following could be better
+    values[["ml_list_crop"]] <- NULL
+    values[["ml_list_crop_year"]] <- NULL
   }
 })
 )

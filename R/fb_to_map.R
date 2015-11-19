@@ -6,16 +6,21 @@
 #' @param DF a fieldbook data frame
 #' @param rep column short label used for replication
 #' @param blk column short label used for block (ignored currently)
-#' @param plot column short label for plot ID
+#' @param plt column short label for plot ID
 #' @param variable the main variable value to plot
 #' @export
-fb_to_map <- function(DF, rep="REP", blk = "BLK", plot = "PLOT", variable = "HI"){
+fb_to_map <- function(DF, rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
+  DF[, rep] = as.integer(DF[, rep])
+  PLTL <- DF[, plt]
+  DF[, plt] = as.integer(DF[, plt])
+  # TODO block treatment
+
   nc = max(table(DF[, rep]))
   nr = length(unique(DF[, rep]))
   fb_map = matrix(NA, ncol = nc, nrow = nr)
 
-  cnl <- c(variable, rep, plot, blk, variable)
+  #cnl <- c(rep, plt, blk, variable)
   #other_vars <- c(variable, names(DF)[!names(DF) %in% cnl])
 
   for(i in 1:nr){
@@ -25,11 +30,11 @@ fb_to_map <- function(DF, rep="REP", blk = "BLK", plot = "PLOT", variable = "HI"
   for(j in 1:nrow(DF)) {
     #ll = DF[j, other_vars]
     #ll = paste0(names(ll),": ", ll)
-    ll = paste0(variable,": ", DF[j, variable])
+    ll = paste0(variable,": ", DF[j, variable], " @ plot: ", as.character(PLTL[j]))
     #ll = paste(ll, collapse = "; ")
 
     ri = DF[j, rep]
-    ci = DF[j, plot] - (ri * nc) + nc
+    ci = DF[j, plt] - (ri * nc) + nc
     #print(paste(ri, ci))
     cn[ri, ci ] = ll
   }
@@ -37,7 +42,8 @@ fb_to_map <- function(DF, rep="REP", blk = "BLK", plot = "PLOT", variable = "HI"
 }
 
 
-DF = fbmaterials::get_fieldbook_data("SPYLAT2013_MZ-Gurue")
-fm <- fb_to_map(DF, variable = "RS")
-d3heatmap::d3heatmap(fm$map, cellnote = fm$notes,
-                     Rowv = FALSE, Colv = FALSE, dendrogram = "none")
+# DF = fbmaterials::get_fieldbook_data("SPYLAT2013_MZ-Gurue")
+# DF <- fbmaterials::get_fieldbook_data(  "PTLB199909_OXAPMP_B3C2OXA00-09")
+# fm <- fb_to_map(DF, variable = "LB1", plt = "PLOT", blk = NULL)
+# d3heatmap::d3heatmap(fm$map, cellnote = fm$notes,
+#                      Rowv = FALSE, Colv = FALSE, dendrogram = "none")

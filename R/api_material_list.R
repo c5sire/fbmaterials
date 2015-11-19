@@ -36,10 +36,10 @@ new_materials_table <- function(){
 }
 
 get_full_table_name <- function(crop, year, mlist_name){
-  fns <- fbglobal::fname_material_lists()
+  fns <- fbglobal::fname_material_lists(crop)
   if (is.null(fns)) return(NULL)
   if (length(fns) < 1) return(NULL)
-  fns <- file.path(fns, crop, paste0(year,"_", mlist_name))
+  fns <- file.path(fns, paste0(year,"_", mlist_name))
   fns
 }
 
@@ -58,7 +58,7 @@ get_material_table <- function(crop, year, mlist_name){
   #print(fns)
   if (is.null(fns)) return(NULL)
   if (length(fns) < 1) return(NULL)
-  if (!file.exists(fns)) {
+  if (!file.exists(fns[1])) {
     return(NULL)
   }
   load(fns)
@@ -84,7 +84,7 @@ get_material_table <- function(crop, year, mlist_name){
 #' @author Reinhard Simon
 #' @export
 post_material_table <- function(table_materials, crop, year, mlist_name, notes = NULL){
-  fname <- file.path(fbglobal::fname_material_lists(), crop, paste0(year, "_",  mlist_name))
+  fname <- file.path(fbglobal::fname_material_lists(crop),  paste0(year, "_",  mlist_name))
   attr(table_materials, "crop" ) <- crop
   attr(table_materials, "year" ) <- year
   attr(table_materials, "name" ) <- mlist_name
@@ -109,7 +109,7 @@ list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
   if(is.null(crop)){
     fns <- fbglobal::fname_material_lists()
   } else {
-    fns <- file.path(fbglobal::fname_material_lists(), crop)
+    fns <- file.path(fbglobal::fname_material_lists(crop))
   }
 
 
@@ -129,7 +129,10 @@ list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
     if(is.null(crop)) return("")
     if(is.na(fns[1])) return("")
     if(fns[1] == crop) return("")
+    if(fns[1] == "materiallists") return(NULL)
   }
+   chk = basename(fns)
+   if (stringr::str_detect(chk[1],"material")) return(NULL)
 
    fns
 }

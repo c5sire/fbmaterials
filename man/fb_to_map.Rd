@@ -4,7 +4,7 @@
 \alias{fb_to_map}
 \title{converts fieldbook to field map}
 \usage{
-fb_to_map(DF, rep = "REP", blk = "BLK", plot = "PLOT", variable = "HI")
+fb_to_map(DF, rep = "REP", blk = NULL, plt = "PLOT", variable = "HI")
 }
 \arguments{
 \item{DF}{a fieldbook data frame}
@@ -13,7 +13,7 @@ fb_to_map(DF, rep = "REP", blk = "BLK", plot = "PLOT", variable = "HI")
 
 \item{blk}{column short label used for block (ignored currently)}
 
-\item{plot}{column short label for plot ID}
+\item{plt}{column short label for plot ID}
 
 \item{variable}{the main variable value to plot}
 }

@@ -10,7 +10,7 @@ get_fieldbook_total(crop = "all")
 \item{crop}{a crop name or 'all' (default)}
 }
 \description{
-get fieldbook total
+get fieldbook total.
 }
 \author{
 Reinhard Simon
