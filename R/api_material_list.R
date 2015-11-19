@@ -133,7 +133,7 @@ list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
     if(is.null(crop)) return("")
     if(is.na(fns[1])) return("")
     if(fns[1] == crop) return("")
-    if(fns[1] == "materiallists") return(NULL)
+    #if(fns[1] == "materiallists") return(NULL)
   }
    chk = basename(fns)
    if (stringr::str_detect(chk[1],"material")) return(NULL)
