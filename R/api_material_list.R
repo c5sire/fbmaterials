@@ -152,6 +152,7 @@ list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
 list_years_for_crop <- function(crop){
   out = 2015 # replace with current year
   x = list_material_lists(crop = crop, short = TRUE)
+  if(is.null(x)) return(NULL)
   if(x[1] == "") return(out)
   if (is.null(crop)) return(out)
   if (length(crop) <  1) return(out)

@@ -61,7 +61,10 @@ output$mlist_crop <- shiny::renderUI({
 output$mlist_year <- shiny::renderUI({
   #chc <- list_years_for_crop(input$mlist_crop)
   chc <- get_ml_list_crop()
-  shiny::selectInput("mlist_year", NULL, choices = chc, width = '50%')
+  if(!is.null(chc)){
+    shiny::selectInput("mlist_year", NULL, choices = chc, width = '50%')
+  }
+
 })
 
 
