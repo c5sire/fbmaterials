@@ -4,10 +4,13 @@
 \alias{fb_to_map}
 \title{converts fieldbook to field map}
 \usage{
-fb_to_map(DF, rep = "REP", blk = NULL, plt = "PLOT", variable = "HI")
+fb_to_map(DF, gt, rep = "REP", blk = NULL, plt = "PLOT",
+  variable = "HI")
 }
 \arguments{
 \item{DF}{a fieldbook data frame}
+
+\item{gt}{genotype column}
 
 \item{rep}{column short label used for replication}
 
