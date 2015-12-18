@@ -4,12 +4,13 @@
 #' replication (as in an RCBD trial).
 #'
 #' @param DF a fieldbook data frame
+#' @param gt a genotype
 #' @param rep column short label used for replication
 #' @param blk column short label used for block (ignored currently)
 #' @param plt column short label for plot ID
 #' @param variable the main variable value to plot
 #' @export
-fb_to_map <- function(DF, rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
+fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
   DF[, rep] = as.integer(DF[, rep])
   PLTL <- DF[, plt]
@@ -30,7 +31,9 @@ fb_to_map <- function(DF, rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
   for(j in 1:nrow(DF)) {
     #ll = DF[j, other_vars]
     #ll = paste0(names(ll),": ", ll)
-    ll = paste0(variable,": ", DF[j, variable], " @ plot: ", as.character(PLTL[j]))
+    #ll = paste0(variable,": ", DF[j, variable], " @ plot: ", as.character(PLTL[j]))
+    ll = paste0(variable,": ", DF[j, variable], " @ plot: ", as.character(PLTL[j]),
+                ", genotype: ", DF[j, gt ])
     #ll = paste(ll, collapse = "; ")
 
     ri = DF[j, rep]
