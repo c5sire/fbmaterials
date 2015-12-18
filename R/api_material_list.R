@@ -126,7 +126,7 @@ list_material_lists <- function(crop=NULL, year=NULL, short=FALSE){
   }
   if(short){
     fns = basename(fns)
-    fns = stringr::str_replace(fns, yr, "")
+    fns = stringr::str_replace(fns, yr, "_")
     if(is.null(fns)) return("")
     #print(fns)
     #print(crop)
