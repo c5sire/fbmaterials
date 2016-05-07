@@ -7,6 +7,7 @@
 #' @param session shinyserver session
 #' @param dom target dom element name
 #' @param values reactive values
+#' @importFrom magrittr '%>%'
 #' @author Reinhard Simon
 #' @export
 server_material_list <- function(input, output, session, dom="hot_materials", values){
@@ -26,7 +27,7 @@ server_material_list <- function(input, output, session, dom="hot_materials", va
 
   rv_fp_ml <- function(){"D:"}
 
-  get_ml_list_crop <- reactive({
+  get_ml_list_crop <- shiny::reactive({
     fbl <- values[["ml_list_crop"]]
     #print(fbl)
     if(is.null(fbl)) {
@@ -36,7 +37,7 @@ server_material_list <- function(input, output, session, dom="hot_materials", va
     fbl
   })
 
-  get_ml_list_crop_year <- reactive({
+  get_ml_list_crop_year <- shiny::reactive({
     fbl <- values[["ml_list_crop_year"]]
     #print(fbl)
     if(is.null(fbl)) {
@@ -118,7 +119,7 @@ shiny::observeEvent(input$doListButton, ({
                          notes = input$mlist_notes_new
                          )
   values[["ml_list_crop_year"]] <- NULL
-  output$new_list_success = renderText(paste(input$mlist_name_new, "created!"))
+  output$new_list_success = shiny::renderText(paste(input$mlist_name_new, "created!"))
 })#, suspended = TRUE
 )
 
