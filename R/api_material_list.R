@@ -62,8 +62,7 @@ get_material_table <- function(crop, year, mlist_name){
     return(NULL)
   }
   load(fns)
-  # must add extension to files for readRDS to work
-  #table_materials <- readRDS(fns)
+
   if (is.null(attr(table_materials, "crop")) || attr(table_materials, "crop") == "crop") {
     attr(table_materials, "crop" ) <- crop
     attr(table_materials, "year" ) <- year

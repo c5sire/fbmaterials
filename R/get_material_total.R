@@ -130,28 +130,6 @@ get_genotype_list_by_loc <- function(loc){
 }
 
 
-#' get unique genotypes by location
-#'
-#' (up to hundred)
-#'
-#' @param loc location short name
-#' @export
-get_genotype_list_by_loc <- function(loc){
-  lf <- get_fieldbook_list(full_path = TRUE, name_only = FALSE)
-  lf <- lf[stringr::str_detect(toupper(lf), toupper(loc))]
-  n = length(lf)
-  lst = "none"
-  if(n > 0){
-    lst = character()
-    for(i in 1:n){
-      fb <- readRDS(lf[i])
-      meta <- attr(fb, "meta")
-      lst = c(lst, meta$materials)
-    }
-    lst = sort(unique(lst))
-  }
-  lst
-}
 
 
 
