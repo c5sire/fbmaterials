@@ -1,6 +1,6 @@
 Package: fbmaterials
-Title: Manages a list of plant materials
-Version: 0.0.5
+Title: Manages a List of Plant Materials
+Version: 0.0.6
 Authors@R: person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre"))
 Description: Manages a list of plant materials.
 Depends:
