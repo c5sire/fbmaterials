@@ -8,6 +8,7 @@
 #' @param dom target dom element name
 #' @param values reactive values
 #' @importFrom magrittr '%>%'
+#' @importFrom utils write.csv
 #' @author Reinhard Simon
 #' @export
 server_material_list <- function(input, output, session, dom="hot_materials", values){
