@@ -13,10 +13,11 @@ server_material_list <- function(input, output, session, dom="hot_materials", va
   setHot_materials = function(x) values[[dom]] = x
   roots = shinyFiles::getVolumes("Page File (F:)")
   #print(roots)
-  shinyFiles::shinyFileChoose(input, 'mlist_files', session=session,
+  shinyFiles::shinyFileChoose(input, 'mlist_files_xl', session=session,
           #roots=roots,
           roots = roots,
-          filetypes=c('', '.xlsx'))
+          filetypes=c('xlsx')
+          )
 
   # rv_fp_ml <- shiny::reactive({
   #   fp <- shinyFiles::parseFilePaths( roots, input$mlist_files)$datapath
