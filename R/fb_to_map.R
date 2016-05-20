@@ -37,8 +37,12 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
     #ll = paste(ll, collapse = "; ")
 
     ri = DF[j, rep]
-    ci = DF[j, plt] - (ri * nc) + nc
-    #print(paste(ri, ci))
+    if(nr > 1){
+      ci = DF[j, plt] - (ri * nc) + nc
+    } else {
+      ci = j
+    }
+
     cn[ri, ci ] = ll
   }
   list(map = fb_map, notes = cn)

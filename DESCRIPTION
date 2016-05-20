@@ -1,10 +1,12 @@
 Package: fbmaterials
 Title: Manages a list of plant materials
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: person("Reinhard", "Simon", email = "r.simon@cgiar.org", role = c("aut", "cre"))
+Author: Reinhard Simon <R.SIMON@CGIAR.ORG>
+Maintainer: Reinhard Simon <R.SIMON@CGIAR.ORG>
 Description: Manages a list of plant materials.
 Depends:
-    R (>= 3.2.2)
+    R (>= 3.2.4)
 License: GPL-3
 LazyData: true
 Imports: agricolae,
