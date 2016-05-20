@@ -30,7 +30,8 @@ ui_material_list <- function(type = "tab", title = "Material list configuration"
                                                choices = c("List", "Excel") ),
                            shiny::conditionalPanel(
                              "input.mlist_choose_list_source == 'Excel'",
-                             shinyFiles::shinyFilesButton('mlist_files', 'File selection!', 'Please select a file', FALSE )
+                             shinyFiles::shinyFilesButton('mlist_files_xl', 'Excel file selection!',
+                                                          'Please select an Excel file', FALSE)
                            ),
                            shiny::textOutput("new_list_success"),
                            shiny::actionButton("doListButton", "Create new list!")

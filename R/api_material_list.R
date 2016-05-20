@@ -183,13 +183,16 @@ import_list_from_prior <- function( crop, year, fname=NULL, # source
                                     year_new, mlist_name=NULL, notes = NULL # target; crop same
                                     ){
   stopifnot(!is.null(fname))
-  stopifnot(!is.null(mlist_name))
+  stopifnot(is.null(mlist_name))
   out = FALSE
 
   table_materials = NULL
   try({
-  if(stringr::str_detect(fname, ".xlsx")){
+  if(stringr::str_detect(fname, "xlsx")){
     table_materials <- readxl::read_excel(fname, "materials")
+    print(table_materials)
+
+    #fname = basename(fname)
     out = TRUE
   } else {
     fname = get_full_table_name(crop, year, fname)
