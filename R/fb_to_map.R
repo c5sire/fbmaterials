@@ -12,10 +12,14 @@
 #' @export
 fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
+  print(head(DF))
   DF[, rep] = as.integer(DF[, rep])
   PLTL <- DF[, plt]
   DF[, plt] = as.integer(DF[, plt])
   # TODO block treatment
+  print("====")
+  print(head(DF))
+  #print(variable)
 
   nc = max(table(DF[, rep]))
   nr = length(unique(DF[, rep]))
@@ -23,7 +27,12 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
 
   #cnl <- c(rep, plt, blk, variable)
   #other_vars <- c(variable, names(DF)[!names(DF) %in% cnl])
-
+  # if(all(is.na(variable))){
+  #   variable = rep(0, length(variable))
+  # }
+  if(all(is.na(DF[, variable]))){
+    DF[, variable] = rep(0, nrow(DF))
+  }
   for(i in 1:nr){
     fb_map[i, ] = DF[DF[rep] == i, variable]
   }
@@ -43,6 +52,7 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
       ci = j
     }
 
+    #print(ll)
     cn[ri, ci ] = ll
   }
   list(map = fb_map, notes = cn)

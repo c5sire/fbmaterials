@@ -163,12 +163,15 @@ get_trial_factors <- function(trial_name){
 #' get trial variables.
 #'
 #' @param trial_name a trial name
+#' @return vector of labels
 #' @export
 get_trial_variables <- function(trial_name){
   fl <- get_last_factor_index(trial_name)
+  #print(fl)
   if(!is.list(fl)) return("")
   n = fl$fl[length(fl$fl)] + 1
   #fl$fl = n + 1
+  #print(fl$nm)
   fl$nm[n:length(fl$nm)]
 }
 

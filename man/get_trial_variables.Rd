@@ -9,6 +9,9 @@ get_trial_variables(trial_name)
 \arguments{
 \item{trial_name}{a trial name}
 }
+\value{
+vector of labels
+}
 \description{
 get trial variables.
 }
