@@ -12,13 +12,13 @@
 #' @export
 fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
-  print(head(DF))
+  #print(head(DF))
   DF[, rep] = as.integer(DF[, rep])
   PLTL <- DF[, plt]
   DF[, plt] = as.integer(DF[, plt])
   # TODO block treatment
-  print("====")
-  print(head(DF))
+  #print("====")
+  #print(head(DF))
   #print(variable)
 
   nc = max(table(DF[, rep]))
