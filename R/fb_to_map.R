@@ -13,6 +13,11 @@
 fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
   #print(head(DF))
+  DF = as.data.frame(DF)
+  # print("FB map")
+  # print(str(DF))
+  # print(rep)
+  # print("FB map end")
   DF[, rep] = as.integer(DF[, rep])
   PLTL <- DF[, plt]
   DF[, plt] = as.integer(DF[, plt])
