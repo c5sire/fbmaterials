@@ -12,15 +12,27 @@
 #' @export
 fb_to_map <- function(DF, gt = "INSTN", rep = "REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
+<<<<<<< HEAD
   print("fieldbook map")
   # print(head(DF))
+=======
+  #print(head(DF))
+  DF = as.data.frame(DF)
+  # print("FB map")
+  # print(str(DF))
+  # print(rep)
+  # print("FB map end")
+>>>>>>> f959aa76a25fa7fb157ef9ad7087541a19edf596
   DF[, rep] = as.integer(DF[, rep])
   PLTL <- DF[, plt]
   DF[, plt] = as.integer(DF[, plt])
   # TODO block treatment
+<<<<<<< HEAD
   # print("====")
   # print(head(DF))
   #print(variable)
+=======
+>>>>>>> f959aa76a25fa7fb157ef9ad7087541a19edf596
 
   nc = max(table(DF[, rep]))
   nr = length(unique(DF[, rep]))
@@ -34,6 +46,7 @@ fb_to_map <- function(DF, gt = "INSTN", rep = "REP", blk = NULL, plt = "PLOT", v
   if(all(is.na(DF[, variable]))){
     DF[, variable] = rep(0, nrow(DF))
   }
+<<<<<<< HEAD
   print(rep)
   print(nr)
   print(DF[, rep])
@@ -43,6 +56,20 @@ fb_to_map <- function(DF, gt = "INSTN", rep = "REP", blk = NULL, plt = "PLOT", v
     print(i)
     print(length(DF[DF[, rep] == i, variable]))
     fb_map[i, ] <- DF[DF[, rep] == i, variable]
+=======
+
+  # TODO better handling of plot IDs
+  # if(DF[1, plt] > 100) DF[, plt] = DF[, plt] - 100
+  # if(DF[1, plt] > 1000) DF[, plt] = DF[, plt] - 1000
+  # print("====")
+  # print(head(DF))
+  # print(str(DF))
+  # print(variable)
+
+
+  for(i in 1:nr){
+    fb_map[i, ] = DF[DF[ ,rep] == i, variable]
+>>>>>>> f959aa76a25fa7fb157ef9ad7087541a19edf596
   }
   cn = matrix("", ncol = nc, nrow=nr)
   for(j in 1:nrow(DF)) {
@@ -55,12 +82,17 @@ fb_to_map <- function(DF, gt = "INSTN", rep = "REP", blk = NULL, plt = "PLOT", v
 
     ri = DF[j, rep]
     if(nr > 1){
-      ci = DF[j, plt] - (ri * nc) + nc
+      #ci = DF[j, plt] - (ri * nc) + nc
+      ci = j - (ri * nc) + nc
     } else {
       ci = j
     }
-
-    #print(ll)
+    # print("fbmaterials")
+    # print(ll)
+    # print(cn[j])
+    # print(ri)
+    # print(ci)
+    # print(ll)
     cn[ri, ci ] = ll
   }
   list(map = fb_map, notes = cn)
