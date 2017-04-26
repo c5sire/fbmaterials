@@ -24,4 +24,3 @@ fb_to_map(DF, gt = "INSTN", rep = "REP", blk = NULL, plt = "PLOT",
 Simple implementation; currently only works for 1 factorials with equal plots per
 replication (as in an RCBD trial).
 }
-

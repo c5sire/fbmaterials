@@ -12,4 +12,3 @@ get_trial_factors(trial_name)
 \description{
 get trial factors.
 }
-

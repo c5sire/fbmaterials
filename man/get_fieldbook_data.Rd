@@ -12,4 +12,3 @@ get_fieldbook_data(aname)
 \description{
 Getting data.
 }
-

@@ -12,4 +12,3 @@ exists_fieldbook(crop)
 \description{
 exists fieldbook
 }
-

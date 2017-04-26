@@ -2,6 +2,7 @@
 % Please edit documentation in R/api_material_list.R, R/get_material_total.R
 \name{get_material_total}
 \alias{get_material_total}
+\alias{get_material_total}
 \title{get_material_total}
 \usage{
 get_material_total(crop = "all")
@@ -21,4 +22,3 @@ Reinhard Simon
 
 Reinhard Simon
 }
-

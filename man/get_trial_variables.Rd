@@ -15,4 +15,3 @@ vector of labels
 \description{
 get trial variables.
 }
-

@@ -18,4 +18,3 @@ list years
 \author{
 Reinhard Simon
 }
-

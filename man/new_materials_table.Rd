@@ -15,4 +15,3 @@ creates an empty table with dummy values
 \author{
 Reinhard Simon
 }
-

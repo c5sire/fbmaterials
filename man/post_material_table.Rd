@@ -23,4 +23,3 @@ store program table
 \author{
 Reinhard Simon
 }
-

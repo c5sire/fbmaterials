@@ -12,4 +12,3 @@ get_genotype_list_by_loc(loc)
 \description{
 (up to hundred)
 }
-

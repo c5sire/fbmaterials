@@ -15,4 +15,3 @@ get fieldbook total.
 \author{
 Reinhard Simon
 }
-

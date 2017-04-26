@@ -22,4 +22,3 @@ lists material-lists
 \author{
 Reinhard Simon
 }
-

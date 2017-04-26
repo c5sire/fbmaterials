@@ -14,6 +14,7 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
   #DF is a fieldbook
   #print(head(DF))
   DF = as.data.frame(DF)
+  DF = plyr::arrange(DF, DF[, rep])
   # print("FB map")
   # print(str(DF))
   # print(rep)
@@ -22,12 +23,14 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
   PLTL <- DF[, plt]
   DF[, plt] = as.integer(DF[, plt])
   # TODO block treatment
-  #print("====")
-  #print(head(DF))
-  #print(variable)
+  # print("====")
+  # print(head(DF))
+  # print(variable)
 
   nc = max(table(DF[, rep]))
   nr = length(unique(DF[, rep]))
+  # print(paste("nc", nc))
+  # print(paste("nr", nr))
   fb_map = matrix(NA, ncol = nc, nrow = nr)
 
   #cnl <- c(rep, plt, blk, variable)
@@ -42,22 +45,32 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
     fb_map[i, ] = DF[DF[rep] == i, variable]
   }
   cn = matrix("", ncol = nc, nrow=nr)
+  #print(str(cn))
+  #nnr = 0
   for(j in 1:nrow(DF)) {
     #ll = DF[j, other_vars]
     #ll = paste0(names(ll),": ", ll)
     #ll = paste0(variable,": ", DF[j, variable], " @ plot: ", as.character(PLTL[j]))
-    ll = paste0(variable,": ", DF[j, variable], " @ plot: ", as.character(PLTL[j]),
+    ll = paste0(variable,": ", DF[j, variable], " @ plot: ",  as.character(PLTL[j]),
                 ", genotype: ", DF[j, gt ])
     #ll = paste(ll, collapse = "; ")
+    # nnr = nnr + 1
+    # if(nnr > nc) nnr = 0
 
     ri = DF[j, rep]
     if(nr > 1){
-      ci = DF[j, plt] - (ri * nc) + nc
+      #ci = DF[j, plt] - (ri * nc) + nc
+      ci = j - (ri * nc) + nc
+      #ci = nnr
     } else {
       ci = j
     }
 
     #print(ll)
+    #print(head(cn))
+    # print(paste("j", j))
+    # print(paste("ri2", ri))
+    # print(paste("ci2", ci))
     cn[ri, ci ] = ll
   }
   list(map = fb_map, notes = cn)

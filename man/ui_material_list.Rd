@@ -22,4 +22,3 @@ returns a re-usable user interface element
 \author{
 Reinhard Simon
 }
-

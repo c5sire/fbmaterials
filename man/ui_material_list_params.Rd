@@ -15,4 +15,3 @@ An interface to parameters
 \author{
 Reinhard Simon
 }
-

@@ -16,4 +16,3 @@ get_fieldbook_list(crop = "all", name_only = FALSE, full_path = FALSE)
 \description{
 get fieldbook list
 }
-

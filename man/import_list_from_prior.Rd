@@ -30,4 +30,3 @@ is given. Otherwise reads the file (in .xlsx format).
 \author{
 Reinhard Simon
 }
-

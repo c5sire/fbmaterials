@@ -22,4 +22,3 @@ always returns a table
 \author{
 Reinhard Simon
 }
-
