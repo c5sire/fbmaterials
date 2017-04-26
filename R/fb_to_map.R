@@ -10,22 +10,13 @@
 #' @param plt column short label for plot ID
 #' @param variable the main variable value to plot
 #' @export
-fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
+fb_to_map <- function(DF, gt = "INSTN", rep = "REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
-  #print(head(DF))
   DF = as.data.frame(DF)
   DF = plyr::arrange(DF, DF[, rep])
-  # print("FB map")
-  # print(str(DF))
-  # print(rep)
-  # print("FB map end")
   DF[, rep] = as.integer(DF[, rep])
   PLTL <- DF[, plt]
   DF[, plt] = as.integer(DF[, plt])
-  # TODO block treatment
-  # print("====")
-  # print(head(DF))
-  # print(variable)
 
   nc = max(table(DF[, rep]))
   nr = length(unique(DF[, rep]))
@@ -41,8 +32,10 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
   if(all(is.na(DF[, variable]))){
     DF[, variable] = rep(0, nrow(DF))
   }
+
+
   for(i in 1:nr){
-    fb_map[i, ] = DF[DF[rep] == i, variable]
+    fb_map[i, ] = DF[DF[ ,rep] == i, variable]
   }
   cn = matrix("", ncol = nc, nrow=nr)
   #print(str(cn))
@@ -61,17 +54,11 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
     if(nr > 1){
       #ci = DF[j, plt] - (ri * nc) + nc
       ci = j - (ri * nc) + nc
-      #ci = nnr
+
     } else {
       ci = j
     }
-
-    #print(ll)
-    #print(head(cn))
-    # print(paste("j", j))
-    # print(paste("ri2", ri))
-    # print(paste("ci2", ci))
-    cn[ri, ci ] = ll
+     cn[ri, ci ] = ll
   }
   list(map = fb_map, notes = cn)
 }
