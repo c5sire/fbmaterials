@@ -10,15 +10,16 @@
 #' @param plt column short label for plot ID
 #' @param variable the main variable value to plot
 #' @export
-fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", variable = "HI"){
+fb_to_map <- function(DF, gt = "INSTN", rep = "REP", blk = NULL, plt = "PLOT", variable = "HI"){
   #DF is a fieldbook
-  print(head(DF))
+  print("fieldbook map")
+  # print(head(DF))
   DF[, rep] = as.integer(DF[, rep])
   PLTL <- DF[, plt]
   DF[, plt] = as.integer(DF[, plt])
   # TODO block treatment
-  print("====")
-  print(head(DF))
+  # print("====")
+  # print(head(DF))
   #print(variable)
 
   nc = max(table(DF[, rep]))
@@ -33,8 +34,15 @@ fb_to_map <- function(DF, gt = "INSTN", rep="REP", blk = NULL, plt = "PLOT", var
   if(all(is.na(DF[, variable]))){
     DF[, variable] = rep(0, nrow(DF))
   }
+  print(rep)
+  print(nr)
+  print(DF[, rep])
+  print(fb_map)
+  print(DF[DF[, rep] == nr, variable])
   for(i in 1:nr){
-    fb_map[i, ] = DF[DF[rep] == i, variable]
+    print(i)
+    print(length(DF[DF[, rep] == i, variable]))
+    fb_map[i, ] <- DF[DF[, rep] == i, variable]
   }
   cn = matrix("", ncol = nc, nrow=nr)
   for(j in 1:nrow(DF)) {
